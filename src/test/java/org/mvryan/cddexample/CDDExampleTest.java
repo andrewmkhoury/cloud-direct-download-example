@@ -16,7 +16,6 @@ import java.net.HttpURLConnection;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -36,8 +35,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class CDDExampleTest {
-    private static int bufferSize = 1024;
-    private static int expirationSeconds = 3600; // 1 hour
     private static final String downloadName = "㌕ ㌖ ㌗ ㌘ ㌙ ㌚ ㌛ ㌜ ㌝.jpg";
     private static final String encodedDownloadName = "%E3%8C%95%20%E3%8C%96%20%E3%8C%97%20%E3%8C%98%20%E3%8C%99%20%E3%8C%9A%20%E3%8C%9B%20%E3%8C%9C%20%E3%8C%9D.jpg";
     private static final String contentType = "image/jpeg";
@@ -72,7 +69,7 @@ public class CDDExampleTest {
         System.out.println("URL: " + url);
         validateSignedUrl(url, content);
 
-        //blobContainerClient.getBlobClient(key).delete();
+        blobContainerClient.getBlobClient(key).delete();
     }
 
     private void uploadBlob(BlobContainerClient containerClient, String blobName, byte[] content) {
@@ -111,12 +108,6 @@ public class CDDExampleTest {
                 .setContentType(contentType);
         String sasToken = containerClient.generateSas(builder);
         return new URL(containerClient.getBlobClient(blobName).getBlobUrl() + "?" + sasToken);
-    }
-
-    private byte[] randomBytes(int size) {
-        byte[] bytes = new byte[size];
-        new Random().nextBytes(bytes);
-        return bytes;
     }
 
     private static Properties getCfg() {
