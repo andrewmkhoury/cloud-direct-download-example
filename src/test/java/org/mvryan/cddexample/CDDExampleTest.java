@@ -46,7 +46,7 @@ public class CDDExampleTest {
 
     @BeforeClass
     public static void setup() {
-        Properties properties = getCfg("AZURE_CFG");
+        Properties properties = getCfg();
         String accountName = properties.getProperty("accountName");
         String containerName = properties.getProperty("container");
         String accountKey = properties.getProperty("accountKey");
@@ -72,7 +72,7 @@ public class CDDExampleTest {
         System.out.println("URL: " + url);
         validateSignedUrl(url, content);
 
-        blobContainerClient.getBlobClient(key).delete();
+        //blobContainerClient.getBlobClient(key).delete();
     }
 
     private void uploadBlob(BlobContainerClient containerClient, String blobName, byte[] content) {
@@ -91,7 +91,7 @@ public class CDDExampleTest {
         }
 
         assertEquals(contentType, conn.getHeaderField("Content-Type"));
-        assertEquals(getRFCCompliantContentDispositionHeader(), conn.getHeaderField("Content-Disposition"));
+        assertEquals(getContentDispositionHeader(downloadName, encodedDownloadName), conn.getHeaderField("Content-Disposition"));
 
         assertTrue(java.util.Arrays.equals(expectedContent, toByteArray(conn.getInputStream())));
     }
@@ -119,7 +119,7 @@ public class CDDExampleTest {
         return bytes;
     }
 
-    private static Properties getCfg(String envKey) {
+    private static Properties getCfg() {
         String cfg = "azure.properties";// System.getProperty(envKey);
         assertFalse(Strings.isNullOrEmpty(cfg));
         File cfgFile = new File(cfg);
@@ -138,5 +138,4 @@ public class CDDExampleTest {
         return String.format("inline; filename*=UTF-8''%s",
                 encodedDownloadName);
     }
-
 }
